@@ -65,6 +65,7 @@ class Main inherits IO{
                      stack<-stack.exe();
                   }else{
                      if(str="d")then{
+                        out_string(">");
                         stack.print();
                      }else{
                         stack<-stack.push(new CommandInt.init(new A2I.a2i(str)));
