@@ -98,10 +98,10 @@ str_const2:
 	.word	-1
 str_const1:
 	.word	5
-	.word	10
+	.word	8
 	.word	String_dispTab
 	.word	int_const6
-	.ascii	"examples/hello_world.cl"
+	.ascii	"hello_world.cl"
 	.byte	0	
 	.align	2
 	.word	-1
@@ -109,22 +109,16 @@ str_const0:
 	.word	5
 	.word	8
 	.word	String_dispTab
-	.word	int_const7
+	.word	int_const6
 	.ascii	"Hello, World.\n"
 	.byte	0	
 	.align	2
-	.word	-1
-int_const7:
-	.word	3
-	.word	4
-	.word	Int_dispTab
-	.word	14
 	.word	-1
 int_const6:
 	.word	3
 	.word	4
 	.word	Int_dispTab
-	.word	23
+	.word	14
 	.word	-1
 int_const5:
 	.word	3
