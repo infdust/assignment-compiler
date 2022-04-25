@@ -1,0 +1,3343 @@
+终端机在文法中未使用
+
+    ERROR
+
+
+状态 0 冲突：2 项偏移/归约
+状态 6 冲突：2 项偏移/归约
+状态 16 冲突：2 项偏移/归约
+状态 51 冲突：2 项偏移/归约
+状态 125 冲突：9 项偏移/归约
+状态 138 冲突：14 项偏移/归约
+状态 164 冲突：1 项偏移/归约
+状态 172 冲突：9 项偏移/归约
+状态 174 冲突：9 项偏移/归约
+状态 177 冲突：9 项偏移/归约
+状态 198 冲突：9 项偏移/归约
+状态 200 冲突：9 项偏移/归约
+
+
+语法
+
+    0 $accept: NONT_PROGRAM $end
+
+    1 NONT_PROGRAM: NONT_CLASSES
+
+    2 NONT_CLASSES: %empty
+    3             | NONT_CLASS
+    4             | NONT_CLASSES NONT_CLASS
+
+    5 NONT_CLASS: CLASS TYPEID '{' NONT_FEATURES '}' ';'
+    6           | CLASS TYPEID INHERITS TYPEID '{' NONT_FEATURES '}' ';'
+    7           | error '{' NONT_FEATURES '}' ';'
+    8           | error ';'
+
+    9 NONT_FEATURES: %empty
+   10              | NONT_FEATURE
+   11              | NONT_FEATURES NONT_FEATURE
+
+   12 NONT_FEATURE: OBJECTID ':' TYPEID ';'
+   13             | OBJECTID ':' TYPEID ASSIGN NONT_EXPR ';'
+   14             | OBJECTID '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' ';'
+   15             | error ':' TYPEID ';'
+   16             | error ':' TYPEID ASSIGN NONT_EXPR ';'
+   17             | error ASSIGN NONT_EXPR ';'
+   18             | error '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' ';'
+   19             | error ':' TYPEID '{' NONT_EXPR '}' ';'
+   20             | error '{' NONT_EXPR '}' ';'
+   21             | error ';'
+
+   22 NONT_FORMALS: %empty
+   23             | NONT_FORMAL
+   24             | NONT_FORMALS ',' NONT_FORMAL
+
+   25 NONT_FORMAL: OBJECTID ':' TYPEID
+
+   26 NONT_EXPR: OBJECTID ASSIGN NONT_EXPR
+   27          | OBJECTID '(' NONT_EXPRS_C ')'
+   28          | NONT_EXPR '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   30          | IF NONT_EXPR THEN NONT_EXPR ELSE NONT_EXPR FI
+   31          | WHILE NONT_EXPR LOOP NONT_EXPR POOL
+   32          | '{' NONT_EXPRS_S '}'
+   33          | LET NONT_EXPR_LET
+   34          | CASE NONT_EXPR OF NONT_CASES ESAC
+   35          | NEW TYPEID
+   36          | ISVOID NONT_EXPR
+   37          | NONT_EXPR '+' NONT_EXPR
+   38          | NONT_EXPR '-' NONT_EXPR
+   39          | NONT_EXPR '*' NONT_EXPR
+   40          | NONT_EXPR '/' NONT_EXPR
+   41          | '~' NONT_EXPR
+   42          | NONT_EXPR '<' NONT_EXPR
+   43          | NONT_EXPR LE NONT_EXPR
+   44          | NONT_EXPR '=' NONT_EXPR
+   45          | NOT NONT_EXPR
+   46          | '(' NONT_EXPR ')'
+   47          | OBJECTID
+   48          | INT_CONST
+   49          | STR_CONST
+   50          | BOOL_CONST
+
+   51 NONT_EXPR_LET: OBJECTID ':' TYPEID IN NONT_EXPR
+   52              | OBJECTID ':' TYPEID ASSIGN NONT_EXPR IN NONT_EXPR
+   53              | OBJECTID ':' TYPEID ',' NONT_EXPR_LET
+   54              | OBJECTID ':' TYPEID ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+   55              | error ':' TYPEID IN NONT_EXPR
+   56              | error ':' TYPEID ASSIGN NONT_EXPR IN NONT_EXPR
+   57              | error ASSIGN NONT_EXPR IN NONT_EXPR
+   58              | error ':' TYPEID ',' NONT_EXPR_LET
+   59              | error ',' NONT_EXPR_LET
+   60              | error ':' TYPEID ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+   61              | error ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+   62              | error IN NONT_EXPR
+
+   63 NONT_EXPRS_C: %empty
+   64             | NONT_EXPR
+   65             | NONT_EXPRS_C ',' NONT_EXPR
+   66             | error ',' NONT_EXPRS_C
+
+   67 NONT_EXPRS_S: %empty
+   68             | NONT_EXPRS_S NONT_EXPR ';'
+   69             | error ';' NONT_EXPRS_S
+
+   70 NONT_CASES: NONT_CASE
+   71           | NONT_CASES NONT_CASE
+
+   72 NONT_CASE: OBJECTID ':' TYPEID DARROW NONT_EXPR ';'
+   73          | error ':' TYPEID DARROW NONT_EXPR ';'
+   74          | error DARROW NONT_EXPR ';'
+   75          | error ';'
+
+
+终结语词，附有它们出现处的规则
+
+    $end (0) 0
+    '(' (40) 14 18 27 28 29 46
+    ')' (41) 14 18 27 28 29 46
+    '*' (42) 39
+    '+' (43) 37
+    ',' (44) 24 53 54 58 59 60 61 65 66
+    '-' (45) 38
+    '.' (46) 28 29
+    '/' (47) 40
+    ':' (58) 12 13 14 15 16 18 19 25 51 52 53 54 55 56 58 60 72 73
+    ';' (59) 5 6 7 8 12 13 14 15 16 17 18 19 20 21 68 69 72 73 74 75
+    '<' (60) 42
+    '=' (61) 44
+    '@' (64) 29
+    '{' (123) 5 6 7 14 18 19 20 32
+    '}' (125) 5 6 7 14 18 19 20 32
+    '~' (126) 41
+    error (256) 7 8 15 16 17 18 19 20 21 55 56 57 58 59 60 61 62 66 69 73 74 75
+    CLASS (258) 5 6
+    ELSE (259) 30
+    FI (260) 30
+    IF (261) 30
+    IN (262) 51 52 55 56 57 62
+    INHERITS (263) 6
+    LET (264) 33
+    LOOP (265) 31
+    POOL (266) 31
+    THEN (267) 30
+    WHILE (268) 31
+    CASE (269) 34
+    ESAC (270) 34
+    OF (271) 34
+    DARROW (272) 72 73 74
+    NEW (273) 35
+    ISVOID (274) 36
+    STR_CONST <symbol> (275) 49
+    INT_CONST <symbol> (276) 48
+    BOOL_CONST <boolean> (277) 50
+    TYPEID <symbol> (278) 5 6 12 13 14 15 16 18 19 25 29 35 51 52 53 54 55 56 58 60 72 73
+    OBJECTID <symbol> (279) 12 13 14 25 26 27 28 29 47 51 52 53 54 72
+    ASSIGN (280) 13 16 17 26 52 54 56 57 60 61
+    NOT (281) 45
+    LE (282) 43
+    ERROR (283)
+
+
+非终结语词，附有它们出现处的规则
+
+    $accept (45)
+        on left: 0
+    NONT_PROGRAM <program> (46)
+        on left: 1
+        on right: 0
+    NONT_CLASSES <classes> (47)
+        on left: 2 3 4
+        on right: 1 4
+    NONT_CLASS <class_> (48)
+        on left: 5 6 7 8
+        on right: 3 4
+    NONT_FEATURES <features> (49)
+        on left: 9 10 11
+        on right: 5 6 7 11
+    NONT_FEATURE <feature> (50)
+        on left: 12 13 14 15 16 17 18 19 20 21
+        on right: 10 11
+    NONT_FORMALS <formals> (51)
+        on left: 22 23 24
+        on right: 14 18 24
+    NONT_FORMAL <formal> (52)
+        on left: 25
+        on right: 23 24
+    NONT_EXPR <expression> (53)
+        on left: 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
+        on right: 13 14 16 17 18 19 20 26 28 29 30 31 34 36 37 38 39 40 41 42 43 44 45 46 51 52 54 55 56 57 60 61 62 64 65 68 72 73 74
+    NONT_EXPR_LET <expression> (54)
+        on left: 51 52 53 54 55 56 57 58 59 60 61 62
+        on right: 33 53 54 58 59 60 61
+    NONT_EXPRS_C <expressions> (55)
+        on left: 63 64 65 66
+        on right: 27 28 29 65 66
+    NONT_EXPRS_S <expressions> (56)
+        on left: 67 68 69
+        on right: 32 68 69
+    NONT_CASES <cases> (57)
+        on left: 70 71
+        on right: 34 71
+    NONT_CASE <case_> (58)
+        on left: 72 73 74 75
+        on right: 70 71
+
+
+状态 0
+
+    0 $accept: . NONT_PROGRAM $end
+
+    error  偏移，并进入状态 1
+    CLASS  偏移，并进入状态 2
+
+    $end   使用规则 2 以归约 (NONT_CLASSES)
+    error  [使用规则 2 以归约 (NONT_CLASSES)]
+    CLASS  [使用规则 2 以归约 (NONT_CLASSES)]
+
+    NONT_PROGRAM  转到状态 3
+    NONT_CLASSES  转到状态 4
+    NONT_CLASS    转到状态 5
+
+
+状态 1
+
+    7 NONT_CLASS: error . '{' NONT_FEATURES '}' ';'
+    8           | error . ';'
+
+    '{'  偏移，并进入状态 6
+    ';'  偏移，并进入状态 7
+
+
+状态 2
+
+    5 NONT_CLASS: CLASS . TYPEID '{' NONT_FEATURES '}' ';'
+    6           | CLASS . TYPEID INHERITS TYPEID '{' NONT_FEATURES '}' ';'
+
+    TYPEID  偏移，并进入状态 8
+
+
+状态 3
+
+    0 $accept: NONT_PROGRAM . $end
+
+    $end  偏移，并进入状态 9
+
+
+状态 4
+
+    1 NONT_PROGRAM: NONT_CLASSES .
+    4 NONT_CLASSES: NONT_CLASSES . NONT_CLASS
+
+    error  偏移，并进入状态 1
+    CLASS  偏移，并进入状态 2
+
+    $end  使用规则 1 以归约 (NONT_PROGRAM)
+
+    NONT_CLASS  转到状态 10
+
+
+状态 5
+
+    3 NONT_CLASSES: NONT_CLASS .
+
+    $default  使用规则 3 以归约 (NONT_CLASSES)
+
+
+状态 6
+
+    7 NONT_CLASS: error '{' . NONT_FEATURES '}' ';'
+
+    error     偏移，并进入状态 11
+    OBJECTID  偏移，并进入状态 12
+
+    error     [使用规则 9 以归约 (NONT_FEATURES)]
+    OBJECTID  [使用规则 9 以归约 (NONT_FEATURES)]
+    '}'       使用规则 9 以归约 (NONT_FEATURES)
+
+    NONT_FEATURES  转到状态 13
+    NONT_FEATURE   转到状态 14
+
+
+状态 7
+
+    8 NONT_CLASS: error ';' .
+
+    $default  使用规则 8 以归约 (NONT_CLASS)
+
+
+状态 8
+
+    5 NONT_CLASS: CLASS TYPEID . '{' NONT_FEATURES '}' ';'
+    6           | CLASS TYPEID . INHERITS TYPEID '{' NONT_FEATURES '}' ';'
+
+    INHERITS  偏移，并进入状态 15
+    '{'       偏移，并进入状态 16
+
+
+状态 9
+
+    0 $accept: NONT_PROGRAM $end .
+
+    $default  接受
+
+
+状态 10
+
+    4 NONT_CLASSES: NONT_CLASSES NONT_CLASS .
+
+    $default  使用规则 4 以归约 (NONT_CLASSES)
+
+
+状态 11
+
+   15 NONT_FEATURE: error . ':' TYPEID ';'
+   16             | error . ':' TYPEID ASSIGN NONT_EXPR ';'
+   17             | error . ASSIGN NONT_EXPR ';'
+   18             | error . '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' ';'
+   19             | error . ':' TYPEID '{' NONT_EXPR '}' ';'
+   20             | error . '{' NONT_EXPR '}' ';'
+   21             | error . ';'
+
+    ASSIGN  偏移，并进入状态 17
+    '{'     偏移，并进入状态 18
+    ';'     偏移，并进入状态 19
+    ':'     偏移，并进入状态 20
+    '('     偏移，并进入状态 21
+
+
+状态 12
+
+   12 NONT_FEATURE: OBJECTID . ':' TYPEID ';'
+   13             | OBJECTID . ':' TYPEID ASSIGN NONT_EXPR ';'
+   14             | OBJECTID . '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' ';'
+
+    ':'  偏移，并进入状态 22
+    '('  偏移，并进入状态 23
+
+
+状态 13
+
+    7 NONT_CLASS: error '{' NONT_FEATURES . '}' ';'
+   11 NONT_FEATURES: NONT_FEATURES . NONT_FEATURE
+
+    error     偏移，并进入状态 11
+    OBJECTID  偏移，并进入状态 12
+    '}'       偏移，并进入状态 24
+
+    NONT_FEATURE  转到状态 25
+
+
+状态 14
+
+   10 NONT_FEATURES: NONT_FEATURE .
+
+    $default  使用规则 10 以归约 (NONT_FEATURES)
+
+
+状态 15
+
+    6 NONT_CLASS: CLASS TYPEID INHERITS . TYPEID '{' NONT_FEATURES '}' ';'
+
+    TYPEID  偏移，并进入状态 26
+
+
+状态 16
+
+    5 NONT_CLASS: CLASS TYPEID '{' . NONT_FEATURES '}' ';'
+
+    error     偏移，并进入状态 11
+    OBJECTID  偏移，并进入状态 12
+
+    error     [使用规则 9 以归约 (NONT_FEATURES)]
+    OBJECTID  [使用规则 9 以归约 (NONT_FEATURES)]
+    '}'       使用规则 9 以归约 (NONT_FEATURES)
+
+    NONT_FEATURES  转到状态 27
+    NONT_FEATURE   转到状态 14
+
+
+状态 17
+
+   17 NONT_FEATURE: error ASSIGN . NONT_EXPR ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 42
+
+
+状态 18
+
+   20 NONT_FEATURE: error '{' . NONT_EXPR '}' ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 43
+
+
+状态 19
+
+   21 NONT_FEATURE: error ';' .
+
+    $default  使用规则 21 以归约 (NONT_FEATURE)
+
+
+状态 20
+
+   15 NONT_FEATURE: error ':' . TYPEID ';'
+   16             | error ':' . TYPEID ASSIGN NONT_EXPR ';'
+   19             | error ':' . TYPEID '{' NONT_EXPR '}' ';'
+
+    TYPEID  偏移，并进入状态 44
+
+
+状态 21
+
+   18 NONT_FEATURE: error '(' . NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' ';'
+
+    OBJECTID  偏移，并进入状态 45
+
+    $default  使用规则 22 以归约 (NONT_FORMALS)
+
+    NONT_FORMALS  转到状态 46
+    NONT_FORMAL   转到状态 47
+
+
+状态 22
+
+   12 NONT_FEATURE: OBJECTID ':' . TYPEID ';'
+   13             | OBJECTID ':' . TYPEID ASSIGN NONT_EXPR ';'
+
+    TYPEID  偏移，并进入状态 48
+
+
+状态 23
+
+   14 NONT_FEATURE: OBJECTID '(' . NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' ';'
+
+    OBJECTID  偏移，并进入状态 45
+
+    $default  使用规则 22 以归约 (NONT_FORMALS)
+
+    NONT_FORMALS  转到状态 49
+    NONT_FORMAL   转到状态 47
+
+
+状态 24
+
+    7 NONT_CLASS: error '{' NONT_FEATURES '}' . ';'
+
+    ';'  偏移，并进入状态 50
+
+
+状态 25
+
+   11 NONT_FEATURES: NONT_FEATURES NONT_FEATURE .
+
+    $default  使用规则 11 以归约 (NONT_FEATURES)
+
+
+状态 26
+
+    6 NONT_CLASS: CLASS TYPEID INHERITS TYPEID . '{' NONT_FEATURES '}' ';'
+
+    '{'  偏移，并进入状态 51
+
+
+状态 27
+
+    5 NONT_CLASS: CLASS TYPEID '{' NONT_FEATURES . '}' ';'
+   11 NONT_FEATURES: NONT_FEATURES . NONT_FEATURE
+
+    error     偏移，并进入状态 11
+    OBJECTID  偏移，并进入状态 12
+    '}'       偏移，并进入状态 52
+
+    NONT_FEATURE  转到状态 25
+
+
+状态 28
+
+   30 NONT_EXPR: IF . NONT_EXPR THEN NONT_EXPR ELSE NONT_EXPR FI
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 53
+
+
+状态 29
+
+   33 NONT_EXPR: LET . NONT_EXPR_LET
+
+    error     偏移，并进入状态 54
+    OBJECTID  偏移，并进入状态 55
+
+    NONT_EXPR_LET  转到状态 56
+
+
+状态 30
+
+   31 NONT_EXPR: WHILE . NONT_EXPR LOOP NONT_EXPR POOL
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 57
+
+
+状态 31
+
+   34 NONT_EXPR: CASE . NONT_EXPR OF NONT_CASES ESAC
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 58
+
+
+状态 32
+
+   35 NONT_EXPR: NEW . TYPEID
+
+    TYPEID  偏移，并进入状态 59
+
+
+状态 33
+
+   36 NONT_EXPR: ISVOID . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 60
+
+
+状态 34
+
+   49 NONT_EXPR: STR_CONST .
+
+    $default  使用规则 49 以归约 (NONT_EXPR)
+
+
+状态 35
+
+   48 NONT_EXPR: INT_CONST .
+
+    $default  使用规则 48 以归约 (NONT_EXPR)
+
+
+状态 36
+
+   50 NONT_EXPR: BOOL_CONST .
+
+    $default  使用规则 50 以归约 (NONT_EXPR)
+
+
+状态 37
+
+   26 NONT_EXPR: OBJECTID . ASSIGN NONT_EXPR
+   27          | OBJECTID . '(' NONT_EXPRS_C ')'
+   47          | OBJECTID .
+
+    ASSIGN  偏移，并进入状态 61
+    '('     偏移，并进入状态 62
+
+    $default  使用规则 47 以归约 (NONT_EXPR)
+
+
+状态 38
+
+   45 NONT_EXPR: NOT . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 63
+
+
+状态 39
+
+   41 NONT_EXPR: '~' . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 64
+
+
+状态 40
+
+   32 NONT_EXPR: '{' . NONT_EXPRS_S '}'
+
+    error  偏移，并进入状态 65
+
+    IF          使用规则 67 以归约 (NONT_EXPRS_S)
+    LET         使用规则 67 以归约 (NONT_EXPRS_S)
+    WHILE       使用规则 67 以归约 (NONT_EXPRS_S)
+    CASE        使用规则 67 以归约 (NONT_EXPRS_S)
+    NEW         使用规则 67 以归约 (NONT_EXPRS_S)
+    ISVOID      使用规则 67 以归约 (NONT_EXPRS_S)
+    STR_CONST   使用规则 67 以归约 (NONT_EXPRS_S)
+    INT_CONST   使用规则 67 以归约 (NONT_EXPRS_S)
+    BOOL_CONST  使用规则 67 以归约 (NONT_EXPRS_S)
+    OBJECTID    使用规则 67 以归约 (NONT_EXPRS_S)
+    NOT         使用规则 67 以归约 (NONT_EXPRS_S)
+    '~'         使用规则 67 以归约 (NONT_EXPRS_S)
+    '{'         使用规则 67 以归约 (NONT_EXPRS_S)
+    '}'         使用规则 67 以归约 (NONT_EXPRS_S)
+    '('         使用规则 67 以归约 (NONT_EXPRS_S)
+
+    NONT_EXPRS_S  转到状态 66
+
+
+状态 41
+
+   46 NONT_EXPR: '(' . NONT_EXPR ')'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 67
+
+
+状态 42
+
+   17 NONT_FEATURE: error ASSIGN NONT_EXPR . ';'
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ';'  偏移，并进入状态 77
+
+
+状态 43
+
+   20 NONT_FEATURE: error '{' NONT_EXPR . '}' ';'
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    '}'  偏移，并进入状态 78
+
+
+状态 44
+
+   15 NONT_FEATURE: error ':' TYPEID . ';'
+   16             | error ':' TYPEID . ASSIGN NONT_EXPR ';'
+   19             | error ':' TYPEID . '{' NONT_EXPR '}' ';'
+
+    ASSIGN  偏移，并进入状态 79
+    '{'     偏移，并进入状态 80
+    ';'     偏移，并进入状态 81
+
+
+状态 45
+
+   25 NONT_FORMAL: OBJECTID . ':' TYPEID
+
+    ':'  偏移，并进入状态 82
+
+
+状态 46
+
+   18 NONT_FEATURE: error '(' NONT_FORMALS . ')' ':' TYPEID '{' NONT_EXPR '}' ';'
+   24 NONT_FORMALS: NONT_FORMALS . ',' NONT_FORMAL
+
+    ')'  偏移，并进入状态 83
+    ','  偏移，并进入状态 84
+
+
+状态 47
+
+   23 NONT_FORMALS: NONT_FORMAL .
+
+    $default  使用规则 23 以归约 (NONT_FORMALS)
+
+
+状态 48
+
+   12 NONT_FEATURE: OBJECTID ':' TYPEID . ';'
+   13             | OBJECTID ':' TYPEID . ASSIGN NONT_EXPR ';'
+
+    ASSIGN  偏移，并进入状态 85
+    ';'     偏移，并进入状态 86
+
+
+状态 49
+
+   14 NONT_FEATURE: OBJECTID '(' NONT_FORMALS . ')' ':' TYPEID '{' NONT_EXPR '}' ';'
+   24 NONT_FORMALS: NONT_FORMALS . ',' NONT_FORMAL
+
+    ')'  偏移，并进入状态 87
+    ','  偏移，并进入状态 84
+
+
+状态 50
+
+    7 NONT_CLASS: error '{' NONT_FEATURES '}' ';' .
+
+    $default  使用规则 7 以归约 (NONT_CLASS)
+
+
+状态 51
+
+    6 NONT_CLASS: CLASS TYPEID INHERITS TYPEID '{' . NONT_FEATURES '}' ';'
+
+    error     偏移，并进入状态 11
+    OBJECTID  偏移，并进入状态 12
+
+    error     [使用规则 9 以归约 (NONT_FEATURES)]
+    OBJECTID  [使用规则 9 以归约 (NONT_FEATURES)]
+    '}'       使用规则 9 以归约 (NONT_FEATURES)
+
+    NONT_FEATURES  转到状态 88
+    NONT_FEATURE   转到状态 14
+
+
+状态 52
+
+    5 NONT_CLASS: CLASS TYPEID '{' NONT_FEATURES '}' . ';'
+
+    ';'  偏移，并进入状态 89
+
+
+状态 53
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   30          | IF NONT_EXPR . THEN NONT_EXPR ELSE NONT_EXPR FI
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    THEN  偏移，并进入状态 90
+    LE    偏移，并进入状态 68
+    '<'   偏移，并进入状态 69
+    '='   偏移，并进入状态 70
+    '+'   偏移，并进入状态 71
+    '-'   偏移，并进入状态 72
+    '*'   偏移，并进入状态 73
+    '/'   偏移，并进入状态 74
+    '@'   偏移，并进入状态 75
+    '.'   偏移，并进入状态 76
+
+
+状态 54
+
+   55 NONT_EXPR_LET: error . ':' TYPEID IN NONT_EXPR
+   56              | error . ':' TYPEID ASSIGN NONT_EXPR IN NONT_EXPR
+   57              | error . ASSIGN NONT_EXPR IN NONT_EXPR
+   58              | error . ':' TYPEID ',' NONT_EXPR_LET
+   59              | error . ',' NONT_EXPR_LET
+   60              | error . ':' TYPEID ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+   61              | error . ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+   62              | error . IN NONT_EXPR
+
+    IN      偏移，并进入状态 91
+    ASSIGN  偏移，并进入状态 92
+    ':'     偏移，并进入状态 93
+    ','     偏移，并进入状态 94
+
+
+状态 55
+
+   51 NONT_EXPR_LET: OBJECTID . ':' TYPEID IN NONT_EXPR
+   52              | OBJECTID . ':' TYPEID ASSIGN NONT_EXPR IN NONT_EXPR
+   53              | OBJECTID . ':' TYPEID ',' NONT_EXPR_LET
+   54              | OBJECTID . ':' TYPEID ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+
+    ':'  偏移，并进入状态 95
+
+
+状态 56
+
+   33 NONT_EXPR: LET NONT_EXPR_LET .
+
+    $default  使用规则 33 以归约 (NONT_EXPR)
+
+
+状态 57
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   31          | WHILE NONT_EXPR . LOOP NONT_EXPR POOL
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LOOP  偏移，并进入状态 96
+    LE    偏移，并进入状态 68
+    '<'   偏移，并进入状态 69
+    '='   偏移，并进入状态 70
+    '+'   偏移，并进入状态 71
+    '-'   偏移，并进入状态 72
+    '*'   偏移，并进入状态 73
+    '/'   偏移，并进入状态 74
+    '@'   偏移，并进入状态 75
+    '.'   偏移，并进入状态 76
+
+
+状态 58
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   34          | CASE NONT_EXPR . OF NONT_CASES ESAC
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    OF   偏移，并进入状态 97
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+
+状态 59
+
+   35 NONT_EXPR: NEW TYPEID .
+
+    $default  使用规则 35 以归约 (NONT_EXPR)
+
+
+状态 60
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   36          | ISVOID NONT_EXPR .
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 36 以归约 (NONT_EXPR)
+
+
+状态 61
+
+   26 NONT_EXPR: OBJECTID ASSIGN . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 98
+
+
+状态 62
+
+   27 NONT_EXPR: OBJECTID '(' . NONT_EXPRS_C ')'
+
+    error       偏移，并进入状态 99
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    ')'  使用规则 63 以归约 (NONT_EXPRS_C)
+    ','  使用规则 63 以归约 (NONT_EXPRS_C)
+
+    NONT_EXPR     转到状态 100
+    NONT_EXPRS_C  转到状态 101
+
+
+状态 63
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   45          | NOT NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 45 以归约 (NONT_EXPR)
+
+
+状态 64
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   41          | '~' NONT_EXPR .
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 41 以归约 (NONT_EXPR)
+
+
+状态 65
+
+   69 NONT_EXPRS_S: error . ';' NONT_EXPRS_S
+
+    ';'  偏移，并进入状态 102
+
+
+状态 66
+
+   32 NONT_EXPR: '{' NONT_EXPRS_S . '}'
+   68 NONT_EXPRS_S: NONT_EXPRS_S . NONT_EXPR ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '}'         偏移，并进入状态 103
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 104
+
+
+状态 67
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   46          | '(' NONT_EXPR . ')'
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ')'  偏移，并进入状态 105
+
+
+状态 68
+
+   43 NONT_EXPR: NONT_EXPR LE . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 106
+
+
+状态 69
+
+   42 NONT_EXPR: NONT_EXPR '<' . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 107
+
+
+状态 70
+
+   44 NONT_EXPR: NONT_EXPR '=' . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 108
+
+
+状态 71
+
+   37 NONT_EXPR: NONT_EXPR '+' . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 109
+
+
+状态 72
+
+   38 NONT_EXPR: NONT_EXPR '-' . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 110
+
+
+状态 73
+
+   39 NONT_EXPR: NONT_EXPR '*' . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 111
+
+
+状态 74
+
+   40 NONT_EXPR: NONT_EXPR '/' . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 112
+
+
+状态 75
+
+   29 NONT_EXPR: NONT_EXPR '@' . TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+
+    TYPEID  偏移，并进入状态 113
+
+
+状态 76
+
+   28 NONT_EXPR: NONT_EXPR '.' . OBJECTID '(' NONT_EXPRS_C ')'
+
+    OBJECTID  偏移，并进入状态 114
+
+
+状态 77
+
+   17 NONT_FEATURE: error ASSIGN NONT_EXPR ';' .
+
+    $default  使用规则 17 以归约 (NONT_FEATURE)
+
+
+状态 78
+
+   20 NONT_FEATURE: error '{' NONT_EXPR '}' . ';'
+
+    ';'  偏移，并进入状态 115
+
+
+状态 79
+
+   16 NONT_FEATURE: error ':' TYPEID ASSIGN . NONT_EXPR ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 116
+
+
+状态 80
+
+   19 NONT_FEATURE: error ':' TYPEID '{' . NONT_EXPR '}' ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 117
+
+
+状态 81
+
+   15 NONT_FEATURE: error ':' TYPEID ';' .
+
+    $default  使用规则 15 以归约 (NONT_FEATURE)
+
+
+状态 82
+
+   25 NONT_FORMAL: OBJECTID ':' . TYPEID
+
+    TYPEID  偏移，并进入状态 118
+
+
+状态 83
+
+   18 NONT_FEATURE: error '(' NONT_FORMALS ')' . ':' TYPEID '{' NONT_EXPR '}' ';'
+
+    ':'  偏移，并进入状态 119
+
+
+状态 84
+
+   24 NONT_FORMALS: NONT_FORMALS ',' . NONT_FORMAL
+
+    OBJECTID  偏移，并进入状态 45
+
+    NONT_FORMAL  转到状态 120
+
+
+状态 85
+
+   13 NONT_FEATURE: OBJECTID ':' TYPEID ASSIGN . NONT_EXPR ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 121
+
+
+状态 86
+
+   12 NONT_FEATURE: OBJECTID ':' TYPEID ';' .
+
+    $default  使用规则 12 以归约 (NONT_FEATURE)
+
+
+状态 87
+
+   14 NONT_FEATURE: OBJECTID '(' NONT_FORMALS ')' . ':' TYPEID '{' NONT_EXPR '}' ';'
+
+    ':'  偏移，并进入状态 122
+
+
+状态 88
+
+    6 NONT_CLASS: CLASS TYPEID INHERITS TYPEID '{' NONT_FEATURES . '}' ';'
+   11 NONT_FEATURES: NONT_FEATURES . NONT_FEATURE
+
+    error     偏移，并进入状态 11
+    OBJECTID  偏移，并进入状态 12
+    '}'       偏移，并进入状态 123
+
+    NONT_FEATURE  转到状态 25
+
+
+状态 89
+
+    5 NONT_CLASS: CLASS TYPEID '{' NONT_FEATURES '}' ';' .
+
+    $default  使用规则 5 以归约 (NONT_CLASS)
+
+
+状态 90
+
+   30 NONT_EXPR: IF NONT_EXPR THEN . NONT_EXPR ELSE NONT_EXPR FI
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 124
+
+
+状态 91
+
+   62 NONT_EXPR_LET: error IN . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 125
+
+
+状态 92
+
+   57 NONT_EXPR_LET: error ASSIGN . NONT_EXPR IN NONT_EXPR
+   61              | error ASSIGN . NONT_EXPR ',' NONT_EXPR_LET
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 126
+
+
+状态 93
+
+   55 NONT_EXPR_LET: error ':' . TYPEID IN NONT_EXPR
+   56              | error ':' . TYPEID ASSIGN NONT_EXPR IN NONT_EXPR
+   58              | error ':' . TYPEID ',' NONT_EXPR_LET
+   60              | error ':' . TYPEID ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+
+    TYPEID  偏移，并进入状态 127
+
+
+状态 94
+
+   59 NONT_EXPR_LET: error ',' . NONT_EXPR_LET
+
+    error     偏移，并进入状态 54
+    OBJECTID  偏移，并进入状态 55
+
+    NONT_EXPR_LET  转到状态 128
+
+
+状态 95
+
+   51 NONT_EXPR_LET: OBJECTID ':' . TYPEID IN NONT_EXPR
+   52              | OBJECTID ':' . TYPEID ASSIGN NONT_EXPR IN NONT_EXPR
+   53              | OBJECTID ':' . TYPEID ',' NONT_EXPR_LET
+   54              | OBJECTID ':' . TYPEID ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+
+    TYPEID  偏移，并进入状态 129
+
+
+状态 96
+
+   31 NONT_EXPR: WHILE NONT_EXPR LOOP . NONT_EXPR POOL
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 130
+
+
+状态 97
+
+   34 NONT_EXPR: CASE NONT_EXPR OF . NONT_CASES ESAC
+
+    error     偏移，并进入状态 131
+    OBJECTID  偏移，并进入状态 132
+
+    NONT_CASES  转到状态 133
+    NONT_CASE   转到状态 134
+
+
+状态 98
+
+   26 NONT_EXPR: OBJECTID ASSIGN NONT_EXPR .
+   28          | NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 26 以归约 (NONT_EXPR)
+
+
+状态 99
+
+   66 NONT_EXPRS_C: error . ',' NONT_EXPRS_C
+
+    ','  偏移，并进入状态 135
+
+
+状态 100
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   64 NONT_EXPRS_C: NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 64 以归约 (NONT_EXPRS_C)
+
+
+状态 101
+
+   27 NONT_EXPR: OBJECTID '(' NONT_EXPRS_C . ')'
+   65 NONT_EXPRS_C: NONT_EXPRS_C . ',' NONT_EXPR
+
+    ')'  偏移，并进入状态 136
+    ','  偏移，并进入状态 137
+
+
+状态 102
+
+   69 NONT_EXPRS_S: error ';' . NONT_EXPRS_S
+
+    error  偏移，并进入状态 65
+
+    IF          使用规则 67 以归约 (NONT_EXPRS_S)
+    LET         使用规则 67 以归约 (NONT_EXPRS_S)
+    WHILE       使用规则 67 以归约 (NONT_EXPRS_S)
+    CASE        使用规则 67 以归约 (NONT_EXPRS_S)
+    NEW         使用规则 67 以归约 (NONT_EXPRS_S)
+    ISVOID      使用规则 67 以归约 (NONT_EXPRS_S)
+    STR_CONST   使用规则 67 以归约 (NONT_EXPRS_S)
+    INT_CONST   使用规则 67 以归约 (NONT_EXPRS_S)
+    BOOL_CONST  使用规则 67 以归约 (NONT_EXPRS_S)
+    OBJECTID    使用规则 67 以归约 (NONT_EXPRS_S)
+    NOT         使用规则 67 以归约 (NONT_EXPRS_S)
+    '~'         使用规则 67 以归约 (NONT_EXPRS_S)
+    '{'         使用规则 67 以归约 (NONT_EXPRS_S)
+    '}'         使用规则 67 以归约 (NONT_EXPRS_S)
+    '('         使用规则 67 以归约 (NONT_EXPRS_S)
+
+    NONT_EXPRS_S  转到状态 138
+
+
+状态 103
+
+   32 NONT_EXPR: '{' NONT_EXPRS_S '}' .
+
+    $default  使用规则 32 以归约 (NONT_EXPR)
+
+
+状态 104
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   68 NONT_EXPRS_S: NONT_EXPRS_S NONT_EXPR . ';'
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ';'  偏移，并进入状态 139
+
+
+状态 105
+
+   46 NONT_EXPR: '(' NONT_EXPR ')' .
+
+    $default  使用规则 46 以归约 (NONT_EXPR)
+
+
+状态 106
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   43          | NONT_EXPR LE NONT_EXPR .
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE   错误 (非相联的)
+    '<'  错误 (非相联的)
+    '='  错误 (非相联的)
+
+    $default  使用规则 43 以归约 (NONT_EXPR)
+
+
+状态 107
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   42          | NONT_EXPR '<' NONT_EXPR .
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE   错误 (非相联的)
+    '<'  错误 (非相联的)
+    '='  错误 (非相联的)
+
+    $default  使用规则 42 以归约 (NONT_EXPR)
+
+
+状态 108
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   44          | NONT_EXPR '=' NONT_EXPR .
+
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE   错误 (非相联的)
+    '<'  错误 (非相联的)
+    '='  错误 (非相联的)
+
+    $default  使用规则 44 以归约 (NONT_EXPR)
+
+
+状态 109
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   37          | NONT_EXPR '+' NONT_EXPR .
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 37 以归约 (NONT_EXPR)
+
+
+状态 110
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   38          | NONT_EXPR '-' NONT_EXPR .
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 38 以归约 (NONT_EXPR)
+
+
+状态 111
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   39          | NONT_EXPR '*' NONT_EXPR .
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 39 以归约 (NONT_EXPR)
+
+
+状态 112
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   40          | NONT_EXPR '/' NONT_EXPR .
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 40 以归约 (NONT_EXPR)
+
+
+状态 113
+
+   29 NONT_EXPR: NONT_EXPR '@' TYPEID . '.' OBJECTID '(' NONT_EXPRS_C ')'
+
+    '.'  偏移，并进入状态 140
+
+
+状态 114
+
+   28 NONT_EXPR: NONT_EXPR '.' OBJECTID . '(' NONT_EXPRS_C ')'
+
+    '('  偏移，并进入状态 141
+
+
+状态 115
+
+   20 NONT_FEATURE: error '{' NONT_EXPR '}' ';' .
+
+    $default  使用规则 20 以归约 (NONT_FEATURE)
+
+
+状态 116
+
+   16 NONT_FEATURE: error ':' TYPEID ASSIGN NONT_EXPR . ';'
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ';'  偏移，并进入状态 142
+
+
+状态 117
+
+   19 NONT_FEATURE: error ':' TYPEID '{' NONT_EXPR . '}' ';'
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    '}'  偏移，并进入状态 143
+
+
+状态 118
+
+   25 NONT_FORMAL: OBJECTID ':' TYPEID .
+
+    $default  使用规则 25 以归约 (NONT_FORMAL)
+
+
+状态 119
+
+   18 NONT_FEATURE: error '(' NONT_FORMALS ')' ':' . TYPEID '{' NONT_EXPR '}' ';'
+
+    TYPEID  偏移，并进入状态 144
+
+
+状态 120
+
+   24 NONT_FORMALS: NONT_FORMALS ',' NONT_FORMAL .
+
+    $default  使用规则 24 以归约 (NONT_FORMALS)
+
+
+状态 121
+
+   13 NONT_FEATURE: OBJECTID ':' TYPEID ASSIGN NONT_EXPR . ';'
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ';'  偏移，并进入状态 145
+
+
+状态 122
+
+   14 NONT_FEATURE: OBJECTID '(' NONT_FORMALS ')' ':' . TYPEID '{' NONT_EXPR '}' ';'
+
+    TYPEID  偏移，并进入状态 146
+
+
+状态 123
+
+    6 NONT_CLASS: CLASS TYPEID INHERITS TYPEID '{' NONT_FEATURES '}' . ';'
+
+    ';'  偏移，并进入状态 147
+
+
+状态 124
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   30          | IF NONT_EXPR THEN NONT_EXPR . ELSE NONT_EXPR FI
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    ELSE  偏移，并进入状态 148
+    LE    偏移，并进入状态 68
+    '<'   偏移，并进入状态 69
+    '='   偏移，并进入状态 70
+    '+'   偏移，并进入状态 71
+    '-'   偏移，并进入状态 72
+    '*'   偏移，并进入状态 73
+    '/'   偏移，并进入状态 74
+    '@'   偏移，并进入状态 75
+    '.'   偏移，并进入状态 76
+
+
+状态 125
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   62 NONT_EXPR_LET: error IN NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE        [使用规则 62 以归约 (NONT_EXPR_LET)]
+    '<'       [使用规则 62 以归约 (NONT_EXPR_LET)]
+    '='       [使用规则 62 以归约 (NONT_EXPR_LET)]
+    '+'       [使用规则 62 以归约 (NONT_EXPR_LET)]
+    '-'       [使用规则 62 以归约 (NONT_EXPR_LET)]
+    '*'       [使用规则 62 以归约 (NONT_EXPR_LET)]
+    '/'       [使用规则 62 以归约 (NONT_EXPR_LET)]
+    '@'       [使用规则 62 以归约 (NONT_EXPR_LET)]
+    '.'       [使用规则 62 以归约 (NONT_EXPR_LET)]
+    $default  使用规则 62 以归约 (NONT_EXPR_LET)
+
+
+状态 126
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   57 NONT_EXPR_LET: error ASSIGN NONT_EXPR . IN NONT_EXPR
+   61              | error ASSIGN NONT_EXPR . ',' NONT_EXPR_LET
+
+    IN   偏移，并进入状态 149
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ','  偏移，并进入状态 150
+
+
+状态 127
+
+   55 NONT_EXPR_LET: error ':' TYPEID . IN NONT_EXPR
+   56              | error ':' TYPEID . ASSIGN NONT_EXPR IN NONT_EXPR
+   58              | error ':' TYPEID . ',' NONT_EXPR_LET
+   60              | error ':' TYPEID . ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+
+    IN      偏移，并进入状态 151
+    ASSIGN  偏移，并进入状态 152
+    ','     偏移，并进入状态 153
+
+
+状态 128
+
+   59 NONT_EXPR_LET: error ',' NONT_EXPR_LET .
+
+    $default  使用规则 59 以归约 (NONT_EXPR_LET)
+
+
+状态 129
+
+   51 NONT_EXPR_LET: OBJECTID ':' TYPEID . IN NONT_EXPR
+   52              | OBJECTID ':' TYPEID . ASSIGN NONT_EXPR IN NONT_EXPR
+   53              | OBJECTID ':' TYPEID . ',' NONT_EXPR_LET
+   54              | OBJECTID ':' TYPEID . ASSIGN NONT_EXPR ',' NONT_EXPR_LET
+
+    IN      偏移，并进入状态 154
+    ASSIGN  偏移，并进入状态 155
+    ','     偏移，并进入状态 156
+
+
+状态 130
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   31          | WHILE NONT_EXPR LOOP NONT_EXPR . POOL
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    POOL  偏移，并进入状态 157
+    LE    偏移，并进入状态 68
+    '<'   偏移，并进入状态 69
+    '='   偏移，并进入状态 70
+    '+'   偏移，并进入状态 71
+    '-'   偏移，并进入状态 72
+    '*'   偏移，并进入状态 73
+    '/'   偏移，并进入状态 74
+    '@'   偏移，并进入状态 75
+    '.'   偏移，并进入状态 76
+
+
+状态 131
+
+   73 NONT_CASE: error . ':' TYPEID DARROW NONT_EXPR ';'
+   74          | error . DARROW NONT_EXPR ';'
+   75          | error . ';'
+
+    DARROW  偏移，并进入状态 158
+    ';'     偏移，并进入状态 159
+    ':'     偏移，并进入状态 160
+
+
+状态 132
+
+   72 NONT_CASE: OBJECTID . ':' TYPEID DARROW NONT_EXPR ';'
+
+    ':'  偏移，并进入状态 161
+
+
+状态 133
+
+   34 NONT_EXPR: CASE NONT_EXPR OF NONT_CASES . ESAC
+   71 NONT_CASES: NONT_CASES . NONT_CASE
+
+    error     偏移，并进入状态 131
+    ESAC      偏移，并进入状态 162
+    OBJECTID  偏移，并进入状态 132
+
+    NONT_CASE  转到状态 163
+
+
+状态 134
+
+   70 NONT_CASES: NONT_CASE .
+
+    $default  使用规则 70 以归约 (NONT_CASES)
+
+
+状态 135
+
+   66 NONT_EXPRS_C: error ',' . NONT_EXPRS_C
+
+    error       偏移，并进入状态 99
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    ')'  使用规则 63 以归约 (NONT_EXPRS_C)
+    ','  使用规则 63 以归约 (NONT_EXPRS_C)
+
+    NONT_EXPR     转到状态 100
+    NONT_EXPRS_C  转到状态 164
+
+
+状态 136
+
+   27 NONT_EXPR: OBJECTID '(' NONT_EXPRS_C ')' .
+
+    $default  使用规则 27 以归约 (NONT_EXPR)
+
+
+状态 137
+
+   65 NONT_EXPRS_C: NONT_EXPRS_C ',' . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 165
+
+
+状态 138
+
+   68 NONT_EXPRS_S: NONT_EXPRS_S . NONT_EXPR ';'
+   69             | error ';' NONT_EXPRS_S .
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    IF          [使用规则 69 以归约 (NONT_EXPRS_S)]
+    LET         [使用规则 69 以归约 (NONT_EXPRS_S)]
+    WHILE       [使用规则 69 以归约 (NONT_EXPRS_S)]
+    CASE        [使用规则 69 以归约 (NONT_EXPRS_S)]
+    NEW         [使用规则 69 以归约 (NONT_EXPRS_S)]
+    ISVOID      [使用规则 69 以归约 (NONT_EXPRS_S)]
+    STR_CONST   [使用规则 69 以归约 (NONT_EXPRS_S)]
+    INT_CONST   [使用规则 69 以归约 (NONT_EXPRS_S)]
+    BOOL_CONST  [使用规则 69 以归约 (NONT_EXPRS_S)]
+    OBJECTID    [使用规则 69 以归约 (NONT_EXPRS_S)]
+    NOT         [使用规则 69 以归约 (NONT_EXPRS_S)]
+    '~'         [使用规则 69 以归约 (NONT_EXPRS_S)]
+    '{'         [使用规则 69 以归约 (NONT_EXPRS_S)]
+    '('         [使用规则 69 以归约 (NONT_EXPRS_S)]
+    $default    使用规则 69 以归约 (NONT_EXPRS_S)
+
+    NONT_EXPR  转到状态 104
+
+
+状态 139
+
+   68 NONT_EXPRS_S: NONT_EXPRS_S NONT_EXPR ';' .
+
+    $default  使用规则 68 以归约 (NONT_EXPRS_S)
+
+
+状态 140
+
+   29 NONT_EXPR: NONT_EXPR '@' TYPEID '.' . OBJECTID '(' NONT_EXPRS_C ')'
+
+    OBJECTID  偏移，并进入状态 166
+
+
+状态 141
+
+   28 NONT_EXPR: NONT_EXPR '.' OBJECTID '(' . NONT_EXPRS_C ')'
+
+    error       偏移，并进入状态 99
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    ')'  使用规则 63 以归约 (NONT_EXPRS_C)
+    ','  使用规则 63 以归约 (NONT_EXPRS_C)
+
+    NONT_EXPR     转到状态 100
+    NONT_EXPRS_C  转到状态 167
+
+
+状态 142
+
+   16 NONT_FEATURE: error ':' TYPEID ASSIGN NONT_EXPR ';' .
+
+    $default  使用规则 16 以归约 (NONT_FEATURE)
+
+
+状态 143
+
+   19 NONT_FEATURE: error ':' TYPEID '{' NONT_EXPR '}' . ';'
+
+    ';'  偏移，并进入状态 168
+
+
+状态 144
+
+   18 NONT_FEATURE: error '(' NONT_FORMALS ')' ':' TYPEID . '{' NONT_EXPR '}' ';'
+
+    '{'  偏移，并进入状态 169
+
+
+状态 145
+
+   13 NONT_FEATURE: OBJECTID ':' TYPEID ASSIGN NONT_EXPR ';' .
+
+    $default  使用规则 13 以归约 (NONT_FEATURE)
+
+
+状态 146
+
+   14 NONT_FEATURE: OBJECTID '(' NONT_FORMALS ')' ':' TYPEID . '{' NONT_EXPR '}' ';'
+
+    '{'  偏移，并进入状态 170
+
+
+状态 147
+
+    6 NONT_CLASS: CLASS TYPEID INHERITS TYPEID '{' NONT_FEATURES '}' ';' .
+
+    $default  使用规则 6 以归约 (NONT_CLASS)
+
+
+状态 148
+
+   30 NONT_EXPR: IF NONT_EXPR THEN NONT_EXPR ELSE . NONT_EXPR FI
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 171
+
+
+状态 149
+
+   57 NONT_EXPR_LET: error ASSIGN NONT_EXPR IN . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 172
+
+
+状态 150
+
+   61 NONT_EXPR_LET: error ASSIGN NONT_EXPR ',' . NONT_EXPR_LET
+
+    error     偏移，并进入状态 54
+    OBJECTID  偏移，并进入状态 55
+
+    NONT_EXPR_LET  转到状态 173
+
+
+状态 151
+
+   55 NONT_EXPR_LET: error ':' TYPEID IN . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 174
+
+
+状态 152
+
+   56 NONT_EXPR_LET: error ':' TYPEID ASSIGN . NONT_EXPR IN NONT_EXPR
+   60              | error ':' TYPEID ASSIGN . NONT_EXPR ',' NONT_EXPR_LET
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 175
+
+
+状态 153
+
+   58 NONT_EXPR_LET: error ':' TYPEID ',' . NONT_EXPR_LET
+
+    error     偏移，并进入状态 54
+    OBJECTID  偏移，并进入状态 55
+
+    NONT_EXPR_LET  转到状态 176
+
+
+状态 154
+
+   51 NONT_EXPR_LET: OBJECTID ':' TYPEID IN . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 177
+
+
+状态 155
+
+   52 NONT_EXPR_LET: OBJECTID ':' TYPEID ASSIGN . NONT_EXPR IN NONT_EXPR
+   54              | OBJECTID ':' TYPEID ASSIGN . NONT_EXPR ',' NONT_EXPR_LET
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 178
+
+
+状态 156
+
+   53 NONT_EXPR_LET: OBJECTID ':' TYPEID ',' . NONT_EXPR_LET
+
+    error     偏移，并进入状态 54
+    OBJECTID  偏移，并进入状态 55
+
+    NONT_EXPR_LET  转到状态 179
+
+
+状态 157
+
+   31 NONT_EXPR: WHILE NONT_EXPR LOOP NONT_EXPR POOL .
+
+    $default  使用规则 31 以归约 (NONT_EXPR)
+
+
+状态 158
+
+   74 NONT_CASE: error DARROW . NONT_EXPR ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 180
+
+
+状态 159
+
+   75 NONT_CASE: error ';' .
+
+    $default  使用规则 75 以归约 (NONT_CASE)
+
+
+状态 160
+
+   73 NONT_CASE: error ':' . TYPEID DARROW NONT_EXPR ';'
+
+    TYPEID  偏移，并进入状态 181
+
+
+状态 161
+
+   72 NONT_CASE: OBJECTID ':' . TYPEID DARROW NONT_EXPR ';'
+
+    TYPEID  偏移，并进入状态 182
+
+
+状态 162
+
+   34 NONT_EXPR: CASE NONT_EXPR OF NONT_CASES ESAC .
+
+    $default  使用规则 34 以归约 (NONT_EXPR)
+
+
+状态 163
+
+   71 NONT_CASES: NONT_CASES NONT_CASE .
+
+    $default  使用规则 71 以归约 (NONT_CASES)
+
+
+状态 164
+
+   65 NONT_EXPRS_C: NONT_EXPRS_C . ',' NONT_EXPR
+   66             | error ',' NONT_EXPRS_C .
+
+    ','  偏移，并进入状态 137
+
+    ','       [使用规则 66 以归约 (NONT_EXPRS_C)]
+    $default  使用规则 66 以归约 (NONT_EXPRS_C)
+
+
+状态 165
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   65 NONT_EXPRS_C: NONT_EXPRS_C ',' NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    $default  使用规则 65 以归约 (NONT_EXPRS_C)
+
+
+状态 166
+
+   29 NONT_EXPR: NONT_EXPR '@' TYPEID '.' OBJECTID . '(' NONT_EXPRS_C ')'
+
+    '('  偏移，并进入状态 183
+
+
+状态 167
+
+   28 NONT_EXPR: NONT_EXPR '.' OBJECTID '(' NONT_EXPRS_C . ')'
+   65 NONT_EXPRS_C: NONT_EXPRS_C . ',' NONT_EXPR
+
+    ')'  偏移，并进入状态 184
+    ','  偏移，并进入状态 137
+
+
+状态 168
+
+   19 NONT_FEATURE: error ':' TYPEID '{' NONT_EXPR '}' ';' .
+
+    $default  使用规则 19 以归约 (NONT_FEATURE)
+
+
+状态 169
+
+   18 NONT_FEATURE: error '(' NONT_FORMALS ')' ':' TYPEID '{' . NONT_EXPR '}' ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 185
+
+
+状态 170
+
+   14 NONT_FEATURE: OBJECTID '(' NONT_FORMALS ')' ':' TYPEID '{' . NONT_EXPR '}' ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 186
+
+
+状态 171
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   30          | IF NONT_EXPR THEN NONT_EXPR ELSE NONT_EXPR . FI
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    FI   偏移，并进入状态 187
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+
+状态 172
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   57 NONT_EXPR_LET: error ASSIGN NONT_EXPR IN NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE        [使用规则 57 以归约 (NONT_EXPR_LET)]
+    '<'       [使用规则 57 以归约 (NONT_EXPR_LET)]
+    '='       [使用规则 57 以归约 (NONT_EXPR_LET)]
+    '+'       [使用规则 57 以归约 (NONT_EXPR_LET)]
+    '-'       [使用规则 57 以归约 (NONT_EXPR_LET)]
+    '*'       [使用规则 57 以归约 (NONT_EXPR_LET)]
+    '/'       [使用规则 57 以归约 (NONT_EXPR_LET)]
+    '@'       [使用规则 57 以归约 (NONT_EXPR_LET)]
+    '.'       [使用规则 57 以归约 (NONT_EXPR_LET)]
+    $default  使用规则 57 以归约 (NONT_EXPR_LET)
+
+
+状态 173
+
+   61 NONT_EXPR_LET: error ASSIGN NONT_EXPR ',' NONT_EXPR_LET .
+
+    $default  使用规则 61 以归约 (NONT_EXPR_LET)
+
+
+状态 174
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   55 NONT_EXPR_LET: error ':' TYPEID IN NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE        [使用规则 55 以归约 (NONT_EXPR_LET)]
+    '<'       [使用规则 55 以归约 (NONT_EXPR_LET)]
+    '='       [使用规则 55 以归约 (NONT_EXPR_LET)]
+    '+'       [使用规则 55 以归约 (NONT_EXPR_LET)]
+    '-'       [使用规则 55 以归约 (NONT_EXPR_LET)]
+    '*'       [使用规则 55 以归约 (NONT_EXPR_LET)]
+    '/'       [使用规则 55 以归约 (NONT_EXPR_LET)]
+    '@'       [使用规则 55 以归约 (NONT_EXPR_LET)]
+    '.'       [使用规则 55 以归约 (NONT_EXPR_LET)]
+    $default  使用规则 55 以归约 (NONT_EXPR_LET)
+
+
+状态 175
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   56 NONT_EXPR_LET: error ':' TYPEID ASSIGN NONT_EXPR . IN NONT_EXPR
+   60              | error ':' TYPEID ASSIGN NONT_EXPR . ',' NONT_EXPR_LET
+
+    IN   偏移，并进入状态 188
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ','  偏移，并进入状态 189
+
+
+状态 176
+
+   58 NONT_EXPR_LET: error ':' TYPEID ',' NONT_EXPR_LET .
+
+    $default  使用规则 58 以归约 (NONT_EXPR_LET)
+
+
+状态 177
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   51 NONT_EXPR_LET: OBJECTID ':' TYPEID IN NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE        [使用规则 51 以归约 (NONT_EXPR_LET)]
+    '<'       [使用规则 51 以归约 (NONT_EXPR_LET)]
+    '='       [使用规则 51 以归约 (NONT_EXPR_LET)]
+    '+'       [使用规则 51 以归约 (NONT_EXPR_LET)]
+    '-'       [使用规则 51 以归约 (NONT_EXPR_LET)]
+    '*'       [使用规则 51 以归约 (NONT_EXPR_LET)]
+    '/'       [使用规则 51 以归约 (NONT_EXPR_LET)]
+    '@'       [使用规则 51 以归约 (NONT_EXPR_LET)]
+    '.'       [使用规则 51 以归约 (NONT_EXPR_LET)]
+    $default  使用规则 51 以归约 (NONT_EXPR_LET)
+
+
+状态 178
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   52 NONT_EXPR_LET: OBJECTID ':' TYPEID ASSIGN NONT_EXPR . IN NONT_EXPR
+   54              | OBJECTID ':' TYPEID ASSIGN NONT_EXPR . ',' NONT_EXPR_LET
+
+    IN   偏移，并进入状态 190
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ','  偏移，并进入状态 191
+
+
+状态 179
+
+   53 NONT_EXPR_LET: OBJECTID ':' TYPEID ',' NONT_EXPR_LET .
+
+    $default  使用规则 53 以归约 (NONT_EXPR_LET)
+
+
+状态 180
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   74 NONT_CASE: error DARROW NONT_EXPR . ';'
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ';'  偏移，并进入状态 192
+
+
+状态 181
+
+   73 NONT_CASE: error ':' TYPEID . DARROW NONT_EXPR ';'
+
+    DARROW  偏移，并进入状态 193
+
+
+状态 182
+
+   72 NONT_CASE: OBJECTID ':' TYPEID . DARROW NONT_EXPR ';'
+
+    DARROW  偏移，并进入状态 194
+
+
+状态 183
+
+   29 NONT_EXPR: NONT_EXPR '@' TYPEID '.' OBJECTID '(' . NONT_EXPRS_C ')'
+
+    error       偏移，并进入状态 99
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    ')'  使用规则 63 以归约 (NONT_EXPRS_C)
+    ','  使用规则 63 以归约 (NONT_EXPRS_C)
+
+    NONT_EXPR     转到状态 100
+    NONT_EXPRS_C  转到状态 195
+
+
+状态 184
+
+   28 NONT_EXPR: NONT_EXPR '.' OBJECTID '(' NONT_EXPRS_C ')' .
+
+    $default  使用规则 28 以归约 (NONT_EXPR)
+
+
+状态 185
+
+   18 NONT_FEATURE: error '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR . '}' ';'
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    '}'  偏移，并进入状态 196
+
+
+状态 186
+
+   14 NONT_FEATURE: OBJECTID '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR . '}' ';'
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    '}'  偏移，并进入状态 197
+
+
+状态 187
+
+   30 NONT_EXPR: IF NONT_EXPR THEN NONT_EXPR ELSE NONT_EXPR FI .
+
+    $default  使用规则 30 以归约 (NONT_EXPR)
+
+
+状态 188
+
+   56 NONT_EXPR_LET: error ':' TYPEID ASSIGN NONT_EXPR IN . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 198
+
+
+状态 189
+
+   60 NONT_EXPR_LET: error ':' TYPEID ASSIGN NONT_EXPR ',' . NONT_EXPR_LET
+
+    error     偏移，并进入状态 54
+    OBJECTID  偏移，并进入状态 55
+
+    NONT_EXPR_LET  转到状态 199
+
+
+状态 190
+
+   52 NONT_EXPR_LET: OBJECTID ':' TYPEID ASSIGN NONT_EXPR IN . NONT_EXPR
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 200
+
+
+状态 191
+
+   54 NONT_EXPR_LET: OBJECTID ':' TYPEID ASSIGN NONT_EXPR ',' . NONT_EXPR_LET
+
+    error     偏移，并进入状态 54
+    OBJECTID  偏移，并进入状态 55
+
+    NONT_EXPR_LET  转到状态 201
+
+
+状态 192
+
+   74 NONT_CASE: error DARROW NONT_EXPR ';' .
+
+    $default  使用规则 74 以归约 (NONT_CASE)
+
+
+状态 193
+
+   73 NONT_CASE: error ':' TYPEID DARROW . NONT_EXPR ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 202
+
+
+状态 194
+
+   72 NONT_CASE: OBJECTID ':' TYPEID DARROW . NONT_EXPR ';'
+
+    IF          偏移，并进入状态 28
+    LET         偏移，并进入状态 29
+    WHILE       偏移，并进入状态 30
+    CASE        偏移，并进入状态 31
+    NEW         偏移，并进入状态 32
+    ISVOID      偏移，并进入状态 33
+    STR_CONST   偏移，并进入状态 34
+    INT_CONST   偏移，并进入状态 35
+    BOOL_CONST  偏移，并进入状态 36
+    OBJECTID    偏移，并进入状态 37
+    NOT         偏移，并进入状态 38
+    '~'         偏移，并进入状态 39
+    '{'         偏移，并进入状态 40
+    '('         偏移，并进入状态 41
+
+    NONT_EXPR  转到状态 203
+
+
+状态 195
+
+   29 NONT_EXPR: NONT_EXPR '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C . ')'
+   65 NONT_EXPRS_C: NONT_EXPRS_C . ',' NONT_EXPR
+
+    ')'  偏移，并进入状态 204
+    ','  偏移，并进入状态 137
+
+
+状态 196
+
+   18 NONT_FEATURE: error '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' . ';'
+
+    ';'  偏移，并进入状态 205
+
+
+状态 197
+
+   14 NONT_FEATURE: OBJECTID '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' . ';'
+
+    ';'  偏移，并进入状态 206
+
+
+状态 198
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   56 NONT_EXPR_LET: error ':' TYPEID ASSIGN NONT_EXPR IN NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE        [使用规则 56 以归约 (NONT_EXPR_LET)]
+    '<'       [使用规则 56 以归约 (NONT_EXPR_LET)]
+    '='       [使用规则 56 以归约 (NONT_EXPR_LET)]
+    '+'       [使用规则 56 以归约 (NONT_EXPR_LET)]
+    '-'       [使用规则 56 以归约 (NONT_EXPR_LET)]
+    '*'       [使用规则 56 以归约 (NONT_EXPR_LET)]
+    '/'       [使用规则 56 以归约 (NONT_EXPR_LET)]
+    '@'       [使用规则 56 以归约 (NONT_EXPR_LET)]
+    '.'       [使用规则 56 以归约 (NONT_EXPR_LET)]
+    $default  使用规则 56 以归约 (NONT_EXPR_LET)
+
+
+状态 199
+
+   60 NONT_EXPR_LET: error ':' TYPEID ASSIGN NONT_EXPR ',' NONT_EXPR_LET .
+
+    $default  使用规则 60 以归约 (NONT_EXPR_LET)
+
+
+状态 200
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   52 NONT_EXPR_LET: OBJECTID ':' TYPEID ASSIGN NONT_EXPR IN NONT_EXPR .
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+
+    LE        [使用规则 52 以归约 (NONT_EXPR_LET)]
+    '<'       [使用规则 52 以归约 (NONT_EXPR_LET)]
+    '='       [使用规则 52 以归约 (NONT_EXPR_LET)]
+    '+'       [使用规则 52 以归约 (NONT_EXPR_LET)]
+    '-'       [使用规则 52 以归约 (NONT_EXPR_LET)]
+    '*'       [使用规则 52 以归约 (NONT_EXPR_LET)]
+    '/'       [使用规则 52 以归约 (NONT_EXPR_LET)]
+    '@'       [使用规则 52 以归约 (NONT_EXPR_LET)]
+    '.'       [使用规则 52 以归约 (NONT_EXPR_LET)]
+    $default  使用规则 52 以归约 (NONT_EXPR_LET)
+
+
+状态 201
+
+   54 NONT_EXPR_LET: OBJECTID ':' TYPEID ASSIGN NONT_EXPR ',' NONT_EXPR_LET .
+
+    $default  使用规则 54 以归约 (NONT_EXPR_LET)
+
+
+状态 202
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   73 NONT_CASE: error ':' TYPEID DARROW NONT_EXPR . ';'
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ';'  偏移，并进入状态 207
+
+
+状态 203
+
+   28 NONT_EXPR: NONT_EXPR . '.' OBJECTID '(' NONT_EXPRS_C ')'
+   29          | NONT_EXPR . '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')'
+   37          | NONT_EXPR . '+' NONT_EXPR
+   38          | NONT_EXPR . '-' NONT_EXPR
+   39          | NONT_EXPR . '*' NONT_EXPR
+   40          | NONT_EXPR . '/' NONT_EXPR
+   42          | NONT_EXPR . '<' NONT_EXPR
+   43          | NONT_EXPR . LE NONT_EXPR
+   44          | NONT_EXPR . '=' NONT_EXPR
+   72 NONT_CASE: OBJECTID ':' TYPEID DARROW NONT_EXPR . ';'
+
+    LE   偏移，并进入状态 68
+    '<'  偏移，并进入状态 69
+    '='  偏移，并进入状态 70
+    '+'  偏移，并进入状态 71
+    '-'  偏移，并进入状态 72
+    '*'  偏移，并进入状态 73
+    '/'  偏移，并进入状态 74
+    '@'  偏移，并进入状态 75
+    '.'  偏移，并进入状态 76
+    ';'  偏移，并进入状态 208
+
+
+状态 204
+
+   29 NONT_EXPR: NONT_EXPR '@' TYPEID '.' OBJECTID '(' NONT_EXPRS_C ')' .
+
+    $default  使用规则 29 以归约 (NONT_EXPR)
+
+
+状态 205
+
+   18 NONT_FEATURE: error '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' ';' .
+
+    $default  使用规则 18 以归约 (NONT_FEATURE)
+
+
+状态 206
+
+   14 NONT_FEATURE: OBJECTID '(' NONT_FORMALS ')' ':' TYPEID '{' NONT_EXPR '}' ';' .
+
+    $default  使用规则 14 以归约 (NONT_FEATURE)
+
+
+状态 207
+
+   73 NONT_CASE: error ':' TYPEID DARROW NONT_EXPR ';' .
+
+    $default  使用规则 73 以归约 (NONT_CASE)
+
+
+状态 208
+
+   72 NONT_CASE: OBJECTID ':' TYPEID DARROW NONT_EXPR ';' .
+
+    $default  使用规则 72 以归约 (NONT_CASE)
