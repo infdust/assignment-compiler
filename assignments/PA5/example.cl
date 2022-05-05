@@ -3,7 +3,12 @@
     as possible.
  *)
 
-class Main {
-  main():Int { 0 };
+class Main inherits IO{
+    a : Int;
+    str : String <- {new String;};
+    main():Int {{ 
+        new SELF_TYPE.out_string("123\n");
+        0; 
+        }};
 };
 
