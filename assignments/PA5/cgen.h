@@ -25,9 +25,7 @@ private:
    static constexpr int TAG_INT = 1;
    static constexpr int TAG_BOOL = 2;
    static constexpr int TAG_STR = 3;
-   static constexpr int TAG_IO = 4;
-   static constexpr int TAG_MIN = 5;
-   int tag_next;
+   static constexpr int TAG_MIN = 4;
    int stringclasstag;
    int intclasstag;
    int boolclasstag;
@@ -103,13 +101,14 @@ private:
     CgenClassTable* _ct;
     int _tag;
     int _size;
+    int tag_end;
     Fields _fields;
     Fields _methods;
 
 public:
    CgenNode(Class_ c,
             Basicness bstatus,
-            CgenClassTableP class_table, int tag);
+            CgenClassTableP class_table, int tag = -1);
 
    void add_child(CgenNodeP child);
    List<CgenNode> *get_children() { return children; }
@@ -124,6 +123,7 @@ public:
    int getSize() { return _size; }
    Fields &getFields() { return _fields; }
    Fields &getMethods() { return _methods; }
+   int tagEnd(int tag = 0);
 };
 
 class BoolConst 

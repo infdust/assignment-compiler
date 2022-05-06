@@ -1,0 +1,3 @@
+#!/bin/csh -f
+PA2/lexer $*.cl | PA3/parser $*.cl | PA4/semant $*.cl | PA5/cgen $*.cl
+bash ../bin/spim $*.s

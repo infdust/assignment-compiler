@@ -76,8 +76,9 @@ CgenClassTable *ct;
 CgenNode *getNd(Symbol type) { return type == SELF_TYPE ? ndSelf : ct->probe(type); }
 int label = 0;
 int filestr = 0;
+int tag_next = 0;
 std::vector<int> caseLabel;
-std::vector<CgenNode *> staticNds;
+std::vector<CgenNode *> staticNds = {nullptr, nullptr, nullptr, nullptr};
 //
 // Initializing the predefined symbols.
 //
@@ -717,13 +718,13 @@ void CgenClassTable::install_basic_classes()
     //
     addid(No_class,
           new CgenNode(class_(No_class, No_class, nil_Features(), filename),
-                       Basic, this, -1));
+                       Basic, this));
     addid(SELF_TYPE,
           new CgenNode(class_(SELF_TYPE, No_class, nil_Features(), filename),
-                       Basic, this, -2));
+                       Basic, this));
     addid(prim_slot,
           new CgenNode(class_(prim_slot, No_class, nil_Features(), filename),
-                       Basic, this, -3));
+                       Basic, this));
 
     //
     // The Object class has no parent class. Its methods are
@@ -767,7 +768,7 @@ void CgenClassTable::install_basic_classes()
                            single_Features(method(in_string, nil_Formals(), Str, no_expr()))),
                        single_Features(method(in_int, nil_Formals(), Int, no_expr()))),
                    filename),
-            Basic, this, TAG_IO));
+            Basic, this));
 
     //
     // The Int class has no methods and only a single attribute, the
@@ -844,7 +845,7 @@ void CgenClassTable::install_class(CgenNodeP nd)
 void CgenClassTable::install_classes(Classes cs)
 {
     for (int i = cs->first(); cs->more(i); i = cs->next(i))
-        install_class(new CgenNode(cs->nth(i), NotBasic, this, tag_next++));
+        install_class(new CgenNode(cs->nth(i), NotBasic, this));
 }
 
 //
@@ -937,6 +938,14 @@ void CgenClassTable::code()
         cout << "coding object methods" << endl;
     code_object_methods();
 }
+int CgenNode::tagEnd(int tag)
+{
+    if (tag <= tag_end)
+        return tag_end;
+    if (parent && parent != No_class)
+        get_parentnd()->tagEnd(tag);
+    return tag_end = tag;
+}
 void CgenNode::code_prepare()
 {
     if (_size)
@@ -952,6 +961,19 @@ void CgenNode::code_prepare()
         get_parentnd()->code_prepare();
         _size = get_parentnd()->getSize();
     }
+    if (_tag < 0)
+    {
+        _tag = tag_next++;
+        staticNds.emplace_back(this);
+    }
+    else
+    {
+        staticNds[_tag] = this;
+    }
+    tagEnd(_tag);
+    cerr<<name<<endl;
+    _fields = get_parentnd()->getFields();
+    _methods = get_parentnd()->getMethods();
     for (int i = 0; i < features->len(); ++i)
     {
         auto field = dynamic_cast<attr_class *>(features->nth(i));
@@ -960,18 +982,16 @@ void CgenNode::code_prepare()
         auto nd = _ct->probe(field->type_decl);
         _fields.push(field->name, field->type_decl, _size++, nd, field->init);
     }
-    _methods = get_parentnd()->getMethods();
     for (int i = 0; i < features->len(); ++i)
     {
         auto method = dynamic_cast<method_class *>(features->nth(i));
-        if (method)
-        {
-            auto mtd = _methods[method->name];
-            if (mtd)
-                mtd->type = get_name();
-            else
-                _methods.push(method->name, get_name(), _methods.size(), nullptr, nullptr);
-        }
+        if (!method)
+            continue;
+        auto mtd = _methods[method->name];
+        if (mtd)
+            mtd->type = get_name();
+        else
+            _methods.push(method->name, get_name(), _methods.size(), nullptr, nullptr);
     }
 }
 void CgenClassTable::code_class_name_table()
@@ -1040,9 +1060,8 @@ void CgenClassTable::code_prepare()
 {
     while (!stringtable.lookup_string(nds->hd()->filename->get_string())->equal_index(filestr))
         ++filestr;
-    for (auto l : staticNds)
-        if (l)
-            l->code_prepare();
+    for (auto l = nds; l; l = l->tl())
+        l->hd()->code_prepare();
 }
 void CgenClassTable::code_object_constructors()
 {
@@ -1060,7 +1079,12 @@ void CgenClassTable::code_object_constructors()
                 str << JAL << l->get_parent() << CLASSINIT_SUFFIX << endl;
             for (auto &&field : l->getFields())
             {
-                field.init->code(str);
+                if (field.init->type && field.init->type != No_type)
+                    field.init->code(str);
+                else if (field.type == Int || field.type == Bool || field.type == Str)
+                    str << LA << "$a0 " << field.type << PROTOBJ_SUFFIX << endl;
+                else
+                    str << MOVE << "$a0 $zero" << endl;
                 str << SW << "$a0 " << 4 * field.off << "($s0)" << endl;
             }
 
@@ -1076,7 +1100,7 @@ void CgenClassTable::code_object_methods()
     for (auto l : staticNds)
         if (l)
         {
-            if (l->getTag() < TAG_MIN)
+            if (l->getTag() < TAG_MIN || l->get_name() == IO)
                 continue;
             ndSelf = l;
             for (int i = 0; i < l->features->len(); ++i)
@@ -1119,20 +1143,17 @@ CgenNodeP CgenClassTable::root()
 ///////////////////////////////////////////////////////////////////////
 
 CgenNode::CgenNode(Class_ nd, Basicness bstatus, CgenClassTableP ct, int tag) : class__class((const class__class &)*nd),
-                                                                                parentnd(NULL),
-                                                                                children(NULL),
-                                                                                basic_status(bstatus),
-                                                                                _ct(ct),
-                                                                                _tag(tag),
-                                                                                _size(0),
-                                                                                _fields(),
-                                                                                _methods()
+                                                                       parentnd(NULL),
+                                                                       children(NULL),
+                                                                       basic_status(bstatus),
+                                                                       _ct(ct),
+                                                                       _tag(tag),
+                                                                       tag_end(0),
+                                                                       _size(0),
+                                                                       _fields(),
+                                                                       _methods()
 {
     stringtable.add_string(name->get_string()); // Add class name to string table
-    if(_tag < 0) return;
-    if (staticNds.size() <= _tag)
-        staticNds.resize(_tag + 1, nullptr);
-    staticNds[_tag] = this;
 }
 
 //******************************************************************
@@ -1157,13 +1178,14 @@ void assign_class::code(ostream &s)
 
 void static_dispatch_class::code(ostream &s)
 {
+    if (actual->len())
+        s << ADDIU << "$sp $sp " << -4 * actual->len() << endl;
+    stack.sentry(actual->len());
     for (int i = 0; i < actual->len(); ++i)
     {
         actual->nth(i)->code(s);
-        s << SW << "$a0 " << 4 * i << "($sp)" << endl;
+        s << SW << "$a0 " << 4 * (actual->len() - i) << "($sp)" << endl;
     }
-    s << ADDIU << "$sp $sp " << -4 * actual->len() << endl;
-    stack.sentry(actual->len());
     expr->code(s);
     int off = getNd(type_name)->getMethods()[name]->off;
     s << BNE << "$a0 $zero label" << label << endl
@@ -1180,13 +1202,14 @@ void static_dispatch_class::code(ostream &s)
 
 void dispatch_class::code(ostream &s)
 {
+    if (actual->len())
+        s << ADDIU << "$sp $sp " << -4 * actual->len() << endl;
+    stack.sentry(actual->len());
     for (int i = 0; i < actual->len(); ++i)
     {
         actual->nth(i)->code(s);
-        s << SW << "$a0 " << 4 * i << "($sp)" << endl;
+        s << SW << "$a0 " << 4 * (actual->len() - i) << "($sp)" << endl;
     }
-    s << ADDIU << "$sp $sp " << -4 * actual->len() << endl;
-    stack.sentry(actual->len());
     expr->code(s);
     int off = getNd(expr->type)->getMethods()[name]->off;
     s << BNE << "$a0 $zero label" << label << endl
@@ -1242,11 +1265,26 @@ void typcase_class::code(ostream &s)
     ++label;
     caseLabel.push_back(label);
     ++label;
+    struct Branch
+    {
+        Case p;
+        int begin;
+        int end;
+        Branch(Case a, int b, int c) : p(a), begin(b), end(c) {}
+    };
+    std::vector<Branch> buffer;
     for (int i = 0; i < cases->len(); ++i)
     {
-        cases->nth(i)->code(s);
+        auto p = cases->nth(i);
+        auto nd = getNd(p->getType());
+        buffer.emplace_back(p, nd->getTag(), nd->tagEnd());
     }
-
+    std::sort(buffer.begin(), buffer.end(), [](const Branch &a, const Branch &b) -> bool
+              { return a.end - a.begin < b.end - b.begin; });
+    for(auto&& p:buffer)
+    {
+        p.p->code(s);
+    }
     s << JAL << "_case_abort" << endl
       << "label" << caseLabel.back() << LABEL
       << ADDIU << "$sp $sp 4" << endl;
@@ -1255,9 +1293,11 @@ void typcase_class::code(ostream &s)
 
 void branch_class::code(ostream &s)
 {
+    auto nd = getNd(type_decl);
     int l = label;
     ++label;
-    s << BNE << "$t0 " << getNd(type_decl)->getTag() << " label" << l << endl;
+    s << BLT << "$t0 " << nd->getTag() << " label" << l << endl
+      << BGT << "$t0 " << nd->tagEnd() << " label" << l << endl;
     stack.push(name);
     expr->code(s);
     stack.pop();
@@ -1275,7 +1315,12 @@ void block_class::code(ostream &s)
 
 void let_class::code(ostream &s)
 {
-    init->code(s);
+    if (init->type && init->type != No_type)
+        init->code(s);
+    else if (type_decl == Int || type_decl == Bool || type_decl == Str)
+        s << LA << "$a0 " << type_decl << PROTOBJ_SUFFIX << endl;
+    else
+        s << MOVE << "$a0 $zero" << endl;
     stack.push(identifier);
     s << SW << "$a0 0($sp)" << endl
       << ADDIU << "$sp $sp -4" << endl;
@@ -1387,12 +1432,12 @@ void eq_class::code(ostream &s)
     s << SW << "$a0 0($sp)" << endl
       << ADDIU << "$sp $sp -4" << endl;
     e2->code(s);
-    s << LW << "$t0 12($a0)" << endl
-      << LW << "$t1 4($sp)" << endl
-      << LW << "$t1 12($t1)" << endl
+    s << MOVE << "$t1 $a0" << endl
+      << LW << "$t2 4($sp)" << endl
       << LA "$a0 bool_const1" << endl
-      << BEQ << "$t1 $t0 label" << label << endl
-      << LA "$a0 bool_const0" << endl
+      << BEQ << "$t1 $t2 label" << label << endl
+      << LA "$a1 bool_const0" << endl
+      << JAL << "equality_test" << endl
       << "label" << label << LABEL
       << ADDIU << "$sp $sp 4" << endl;
     stack.pop();

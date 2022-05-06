@@ -137,6 +137,7 @@ void defClass::featuresInit()
     {
         parent->featuresInit();
         methods = parent->methods;
+        objects = parent->objects;
     }
     featuresInited = true;
     methods.enterscope();
@@ -553,7 +554,13 @@ Symbol dispatch_class::semant(const defClass &c)
 Symbol cond_class::semant(const defClass &c)
 {
     c.checkConvertable(this, pred->semant(c), Bool);
-    return type = (c.getDefClass(this, then_exp->semant(c)) | c.getDefClass(this, else_exp->semant(c))).getType();
+    Symbol temp = then_exp->semant(c);
+    auto ans = &c.getDefClass(this, temp);
+    bool isself = temp == SELF_TYPE;
+    temp = else_exp->semant(c);
+    ans = &(*ans | c.getDefClass(this, temp));
+    isself &= temp == SELF_TYPE;
+    return type = isself ? SELF_TYPE : ans->getType();
 }
 Symbol loop_class::semant(const defClass &c)
 {
@@ -563,10 +570,16 @@ Symbol loop_class::semant(const defClass &c)
 Symbol typcase_class::semant(const defClass &c)
 {
     expr->semant(c);
-    auto ans = &c.getDefClass(this, cases->nth(0)->semant(c));
+    Symbol temp = cases->nth(0)->semant(c);
+    auto ans = &c.getDefClass(this, temp);
+    bool isself = temp == SELF_TYPE;
     for (int i = 1; i < cases->len(); ++i)
-        ans = &(*ans | c.getDefClass(this, cases->nth(i)->semant(c)));
-    return type = ans->getType();
+    {
+        temp = cases->nth(i)->semant(c);
+        ans = &(*ans | c.getDefClass(this, temp));
+        isself &= temp == SELF_TYPE;
+    }
+    return type = isself ? SELF_TYPE : ans->getType();
 }
 Symbol block_class::semant(const defClass &c)
 {
@@ -614,25 +627,27 @@ Symbol neg_class::semant(const defClass &c)
     c.checkConvertable(this, e1->semant(c), Int);
     return type = Int;
 }
-void checkCmp(const defClass &c, tree_node *pos, Symbol a, Symbol b)
+void checkCmp(const defClass &c, tree_node *pos, Symbol a, Symbol b, bool order)
 {
-    if (a == b && (a == Int || a == Str || a == Bool))
+    if (!order && (a == b || (a != Int && a != Str && a != Bool && b != Int && b != Str && b != Bool)))
+        return;
+    if (order&&(a == Int && b == Int))
         return;
     c.semant_error(pos) << "Invalid comparision between " << a << " and " << b << '.' << std::endl;
 }
 Symbol lt_class::semant(const defClass &c)
 {
-    checkCmp(c, this, e1->semant(c), e2->semant(c));
+    checkCmp(c, this, e1->semant(c), e2->semant(c), true);
     return type = Bool;
 }
 Symbol eq_class::semant(const defClass &c)
 {
-    checkCmp(c, this, e1->semant(c), e2->semant(c));
+    checkCmp(c, this, e1->semant(c), e2->semant(c), false);
     return type = Bool;
 }
 Symbol leq_class::semant(const defClass &c)
 {
-    checkCmp(c, this, e1->semant(c), e2->semant(c));
+    checkCmp(c, this, e1->semant(c), e2->semant(c), true);
     return type = Bool;
 }
 Symbol comp_class::semant(const defClass &c)

@@ -376,7 +376,7 @@
 
     NONT_CASES:
         NONT_CASE{
-            $$ = nil_Cases();
+            $$ = single_Cases($1);
         }|
         NONT_CASES NONT_CASE{
             $$ = append_Cases($1, single_Cases($2));

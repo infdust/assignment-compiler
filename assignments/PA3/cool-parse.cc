@@ -2269,7 +2269,7 @@ yyreduce:
   case 71:
 #line 378 "cool.y"
                  {
-            (yyval.cases) = nil_Cases();
+            (yyval.cases) = single_Cases((yyvsp[0].case_));
         }
 #line 2275 "cool.tab.c"
     break;
