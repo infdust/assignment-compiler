@@ -156,7 +156,7 @@ OPERATOR_LE                                 <=
 \"                                          { string_buf_ptr = string_buf; BEGIN(STRING); }
 <STRING>\"                                  { putchar('\0'); cool_yylval.symbol = stringtable.add_string(string_buf); BEGIN 0; return STR_CONST; }
 <STRING>\\.                                 { char chr=yytext[1];switch(chr){ case 'b': chr = '\b'; break; case 't': chr = '\t'; break; case 'n': chr = '\n'; break; case 'f': chr = '\f'; break; } putchar(chr); }
-<STRING>\\\n                                { putchar('\n'); }
+<STRING>\\\n                                { ++curr_lineno; putchar('\n'); }
 <STRING>\n                                  { BEGIN(INITIAL); ++curr_lineno; puterror("Unterminated string constant"); }
 <STRING>.                                   { putchar(yytext[0]); }
 <STRING><<EOF>>                             { BEGIN(INITIAL); puterror("EOF in string constant"); }
